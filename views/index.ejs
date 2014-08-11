@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+
+    <script src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script src="/javascripts/jquery-ui.min.js"></script>
+
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/jquery-ui.min.css' />
+    <link rel='stylesheet' href='/stylesheets/jquery-ui.structure.min.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <script>
+
+      $(function () {
+        $("#events").sortable({
+          axis: "y"
+        }).on("sortupdate", function () {
+          $( ".selector" ).sortable({ disabled: true });
+          crunchJsonAndSend();
+        });
+      });
+
+
+      var crunchJsonAndSend = function () {
+        var $listItems = $("#events > li");
+        var order = [];
+
+        $listItems.each(function (i, e) {
+          order.push($(e).data("id"));
+        });
+
+        var callback = function () {
+          $( ".selector" ).sortable({ disabled: false });
+        };
+
+        $.post("/order", { order: order }, callback, "json");
+
+      };
+
+    </script>
+
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="page-header">
+        <h1><%= title %></h1>
+      </div>
+      </div>
+
+      <div class="row">
+
+        <form id="form_id" action="/upload" method="post" enctype="multipart/form-data">
+
+            <ul id="events" class="media-list">
+              <% for(var i=0; i<events.length; i++) {
+                var e = events[i]; %>
+
+                  <li class="media" data-id="<%= e.id %>">
+
+                    <!-- <div class="pull-left">
+                      <img alt="" src="https://s3-eu-west-1.amazonaws.com/membership-eb-images/<%= e.id %>/300x180.png" width="107" height="64" />
+                    </div> -->
+
+                    <div class="pull-left">
+                      <img src="<%= e.logo_url %>" width="64" height="64" alt="">
+                    </div>
+
+                    <div class="media-body">
+                      <h4 class="media-heading">
+                        <%= e.name.html %>
+                      </h4>
+                      <!-- <p>
+                        <input type="file" name="<%= e.id %>" value="">
+                      </p> -->
+                    </div>
+
+                  </li>
+
+              <% } %>
+            </ul>
+
+            <!-- <input class="btn btn-primary" type="submit" name="submit" value="Submit"> -->
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </body>
+</html>

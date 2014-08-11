@@ -1,0 +1,11 @@
+{
+  "accessKeyId": "AKIAJYA3ZE5Z7DKSMB2A",
+  "secretAccessKey": "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",
+  "region": "eu-west-1",
+  "eventbriteApiUrl": "https://www.eventbriteapi.com/v3",
+  "eventbriteApiToken": "FLSCKRDJBBE7KYXJY5AK",
+  "eventbriteApiEventListUrl": "/users/101063397097/owned_events/",
+  "Bucket": "membership-eb-images",
+  "orderJsonKey": "order/order.json"
+
+  }
