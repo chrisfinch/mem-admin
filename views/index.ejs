@@ -14,33 +14,97 @@
     <script>
 
       $(function () {
-        $("#events").sortable({
-          axis: "y"
-        }).on("sortupdate", function () {
-          $( ".selector" ).sortable({ disabled: true });
-          crunchJsonAndSend();
+
+        var $priorityEvents = $("#eventsPriority");
+
+        $("#eventsBin > li").draggable({
+          axis: "y",
+          connectToSortable: "#eventsPriority",
+          helper: "clone"
         });
+
+        $priorityEvents.sortable({
+          axis: "y"
+        });
+
+        $priorityEvents.on("sortupdate", function (event, ui) {
+          console.log("update");
+          crunchJsonAndSend();
+        }).on("sortreceive", function (event, ui) {
+          console.log("recieve", ui);
+          if ($priorityEvents.find(".event").length < 5) {
+            ui.item.remove();
+            bindCancel($priorityEvents);
+          } else {
+            var newId = ui.item.data("id");
+            $priorityEvents.find("[data-id="+newId+"]").remove();
+            alert("Only four priority events can be selected, please remove an old event if you wish to add a new one.");
+          }
+        });
+
+        bindCancel($priorityEvents);
+
       });
 
-
       var crunchJsonAndSend = function () {
-        var $listItems = $("#events > li");
+        var $listItems = $("#eventsPriority > li");
         var order = [];
 
         $listItems.each(function (i, e) {
           order.push($(e).data("id"));
         });
 
-        var callback = function () {
-          $( ".selector" ).sortable({ disabled: false });
-        };
+        $.post("/order", { order: order }, function () {
+          console.log("sent json");
+          $( ".selector" ).draggable({ disabled: false });
+        });
+      };
 
-        $.post("/order", { order: order }, callback, "json");
-
+      var bindCancel = function ($priorityEvents) {
+        $priorityEvents.find(".event .remove").off("click").on("click", function (event) { // DIRTY!
+          var $eventItem = $(event.target).parents(".event");
+          $eventItem.clone()
+            .prependTo("#eventsBin")
+            .draggable({
+              axis: "y",
+              connectToSortable: "#eventsPriority",
+              helper: "clone"
+            });
+          $eventItem.remove();
+          crunchJsonAndSend();
+        });
       };
 
     </script>
 
+    <style>
+      #eventsPriority {
+        height: 322px;
+        //border: 1px solid #000;
+        //padding: 6px;
+        overflow: hidden;
+      }
+
+      #eventsPriority .event .remove {
+        display: block;
+      }
+
+      .event {
+        position: relative;
+      }
+
+      .event:hover {
+        background-color: #ececec;
+        cursor: move;
+      }
+
+      .event .remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: none;
+      }
+    </style>
 
   </head>
   <body>
@@ -49,19 +113,30 @@
 
       <div class="row">
         <div class="page-header">
-        <h1><%= title %></h1>
-      </div>
+          <h1>Membership admin <small>Event management</small></h1>
+        </div>
+
+        <div div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Event priority ordering</h3>
+          </div>
+          <div class="panel-body">
+            <p>Drag a maximum of four events from the events list in to the priority list.</p>
+            <p>Order the events priority list based on the desired priority using drag'n'drop.</p>
+          </div>
+        </div>
+
       </div>
 
       <div class="row">
 
         <form id="form_id" action="/upload" method="post" enctype="multipart/form-data">
 
-            <ul id="events" class="media-list">
-              <% for(var i=0; i<events.length; i++) {
-                var e = events[i]; %>
+            <ul id="eventsPriority" class="media-list well well-sm">
+              <% for(var i=0; i<priorityEvents.length; i++) {
+                var e = priorityEvents[i]; %>
 
-                  <li class="media" data-id="<%= e.id %>">
+                  <li class="media event" data-id="<%= e.id %>">
 
                     <!-- <div class="pull-left">
                       <img alt="" src="https://s3-eu-west-1.amazonaws.com/membership-eb-images/<%= e.id %>/300x180.png" width="107" height="64" />
@@ -74,7 +149,39 @@
                     <div class="media-body">
                       <h4 class="media-heading">
                         <%= e.name.html %>
+                        <button type="button" class="btn btn-danger remove">X</button>
                       </h4>
+                      <p><%= e.start.local %> | <%= e.id %></p>
+                      <!-- <p>
+                        <input type="file" name="<%= e.id %>" value="">
+                      </p> -->
+                    </div>
+
+                  </li>
+
+              <% } %>
+            </ul>
+
+            <ul id="eventsBin" class="media-list">
+              <% for(var i=0; i<events.length; i++) {
+                var e = events[i]; %>
+
+                  <li class="media event" data-id="<%= e.id %>">
+
+                    <!-- <div class="pull-left">
+                      <img alt="" src="https://s3-eu-west-1.amazonaws.com/membership-eb-images/<%= e.id %>/300x180.png" width="107" height="64" />
+                    </div> -->
+
+                    <div class="pull-left">
+                      <img src="<%= e.logo_url %>" width="64" height="64" alt="">
+                    </div>
+
+                    <div class="media-body">
+                      <h4 class="media-heading">
+                        <%= e.name.html %>
+                        <button type="button" class="btn btn-danger remove">X</button>
+                      </h4>
+                      <p><%= e.start.local %> | <%= e.id %></p>
                       <!-- <p>
                         <input type="file" name="<%= e.id %>" value="">
                       </p> -->
