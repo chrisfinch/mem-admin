@@ -1,22 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-var Config = require(__dirname + '/../config.json');
+var Config = require(__base + '/config.json');
 
 var all = require("node-promise").all;
 var fs = require('fs');
 var request = require('request');
-var Uploader = require('s3-upload-stream').Uploader;
 var easyimg = require('easyimage');
 
-var AWS = require('aws-sdk');
-AWS.config.accessKeyId = Config.accessKeyId;
-AWS.config.secretAccessKey = Config.secretAccessKey;
-AWS.config.region = Config.region;
-var s3Bucket = new AWS.S3({params: {Bucket: Config.Bucket}});
-
-
-var s3Uploader = require('s3-upload-stream').Uploader;
+var s3 = require(__base + '/modules/s3');
 
 var ebUrl = function () {
   var s = [];
@@ -26,41 +18,6 @@ var ebUrl = function () {
   s.push(Config.eventbriteApiToken);
 
   return s.join("");
-}
-
-var s3ImageUpload = function (fileStream, path, filename, callback) {
-  var s3 = new s3Uploader(
-    {
-      "accessKeyId": Config.accessKeyId,
-      "secretAccessKey": Config.secretAccessKey,
-      "region": Config.region
-    },
-    {
-      "Bucket": Config.Bucket,
-      "Key": path + "/" + filename,
-      "ACL": "public-read",
-    },
-    function (err, uploadStream)
-    {
-      if(err)
-        console.log(err, uploadStream);
-      else
-      {
-        uploadStream.on('uploaded', callback);
-
-        fileStream.pipe(uploadStream);
-      }
-    }
-  );
-};
-
-var s3OrderJsonUpload = function (json, callback) {
-  var data = {
-    Key: Config.orderJsonKey,
-    Body: JSON.stringify(json),
-    ACL: "public-read"
-  };
-  s3Bucket.putObject(data, callback);
 }
 
 /* GET home page. */
@@ -73,9 +30,7 @@ router.get('/', function(req, res) {
     if (!error && response.statusCode == 200) {
       var events = body.events;
 
-      s3Bucket.getObject({
-        Key: Config.orderJsonKey
-      }, function (err, data) {
+      s3.getOrderJson(function (err, data) {
         var ordering = JSON.parse(data.Body.toString('utf-8')).order;
         var priorityEvents = [];
 
@@ -131,7 +86,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/order', function (req, res) {
-  s3OrderJsonUpload(req.body, function (err, data) {
+  s3.orderJsonUpload(req.body, function (err, data) {
     if (!err) {
       console.log("uploaded " + req.body.order + " to s3");
       res.send(200);
@@ -188,7 +143,7 @@ router.post('/upload', function (req, res) {
             results.forEach(function (result) {
               var filePath = __dirname + '/../public/uploads/' + result.name;
               var stream = fs.createReadStream(filePath);
-              s3ImageUpload(stream, fieldname, result.name, function () {
+              s3.imageUpload(stream, fieldname, result.name, function () {
                 fs.unlink(filePath);
               });
             });
