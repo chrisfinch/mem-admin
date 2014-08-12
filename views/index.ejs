@@ -5,106 +5,12 @@
 
     <script src="/javascripts/jquery-2.1.1.min.js"></script>
     <script src="/javascripts/jquery-ui.min.js"></script>
+    <script src="/javascripts/script.js"></script>
 
     <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
     <link rel='stylesheet' href='/stylesheets/jquery-ui.min.css' />
     <link rel='stylesheet' href='/stylesheets/jquery-ui.structure.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
-
-    <script>
-
-      $(function () {
-
-        var $priorityEvents = $("#eventsPriority");
-
-        $("#eventsBin > li").draggable({
-          axis: "y",
-          connectToSortable: "#eventsPriority",
-          helper: "clone"
-        });
-
-        $priorityEvents.sortable({
-          axis: "y"
-        });
-
-        $priorityEvents.on("sortupdate", function (event, ui) {
-          console.log("update");
-          crunchJsonAndSend();
-        }).on("sortreceive", function (event, ui) {
-          console.log("recieve", ui);
-          if ($priorityEvents.find(".event").length < 5) {
-            ui.item.remove();
-            bindCancel($priorityEvents);
-          } else {
-            var newId = ui.item.data("id");
-            $priorityEvents.find("[data-id="+newId+"]").remove();
-            alert("Only four priority events can be selected, please remove an old event if you wish to add a new one.");
-          }
-        });
-
-        bindCancel($priorityEvents);
-
-      });
-
-      var crunchJsonAndSend = function () {
-        var $listItems = $("#eventsPriority > li");
-        var order = [];
-
-        $listItems.each(function (i, e) {
-          order.push($(e).data("id"));
-        });
-
-        $.post("/order", { order: order }, function () {
-          console.log("sent json");
-          $( ".selector" ).draggable({ disabled: false });
-        });
-      };
-
-      var bindCancel = function ($priorityEvents) {
-        $priorityEvents.find(".event .remove").off("click").on("click", function (event) { // DIRTY!
-          var $eventItem = $(event.target).parents(".event");
-          $eventItem.clone()
-            .prependTo("#eventsBin")
-            .draggable({
-              axis: "y",
-              connectToSortable: "#eventsPriority",
-              helper: "clone"
-            });
-          $eventItem.remove();
-          crunchJsonAndSend();
-        });
-      };
-
-    </script>
-
-    <style>
-      #eventsPriority {
-        height: 322px;
-        //border: 1px solid #000;
-        //padding: 6px;
-        overflow: hidden;
-      }
-
-      #eventsPriority .event .remove {
-        display: block;
-      }
-
-      .event {
-        position: relative;
-      }
-
-      .event:hover {
-        background-color: #ececec;
-        cursor: move;
-      }
-
-      .event .remove {
-        position: absolute;
-        top: 0;
-        right: 0;
-        display: none;
-      }
-    </style>
 
   </head>
   <body>
@@ -132,65 +38,35 @@
 
         <form id="form_id" action="/upload" method="post" enctype="multipart/form-data">
 
-            <ul id="eventsPriority" class="media-list well well-sm">
-              <% for(var i=0; i<priorityEvents.length; i++) {
-                var e = priorityEvents[i]; %>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Priority Events</h3>
+              </div>
+              <div class="panel-body">
+                <ul id="eventsPriority" class="media-list">
+                  <% priorityEvents.forEach(function (e){ %>
 
-                  <li class="media event" data-id="<%= e.id %>">
+                    <% include events/event %>
 
-                    <!-- <div class="pull-left">
-                      <img alt="" src="https://s3-eu-west-1.amazonaws.com/membership-eb-images/<%= e.id %>/300x180.png" width="107" height="64" />
-                    </div> -->
+                  <% }) %>
+                </ul>
+              </div>
+            </div>
 
-                    <div class="pull-left">
-                      <img src="<%= e.logo_url %>" width="64" height="64" alt="">
-                    </div>
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <h3 class="panel-title">Standard Events</h3>
+              </div>
+              <div class="panel-body">
+                <ul id="eventsBin" class="media-list">
+                  <% events.forEach(function (e){ %>
 
-                    <div class="media-body">
-                      <h4 class="media-heading">
-                        <%= e.name.html %>
-                        <button type="button" class="btn btn-danger remove">X</button>
-                      </h4>
-                      <p><%= e.start.local %> | <%= e.id %></p>
-                      <!-- <p>
-                        <input type="file" name="<%= e.id %>" value="">
-                      </p> -->
-                    </div>
+                    <% include events/event %>
 
-                  </li>
-
-              <% } %>
-            </ul>
-
-            <ul id="eventsBin" class="media-list">
-              <% for(var i=0; i<events.length; i++) {
-                var e = events[i]; %>
-
-                  <li class="media event" data-id="<%= e.id %>">
-
-                    <!-- <div class="pull-left">
-                      <img alt="" src="https://s3-eu-west-1.amazonaws.com/membership-eb-images/<%= e.id %>/300x180.png" width="107" height="64" />
-                    </div> -->
-
-                    <div class="pull-left">
-                      <img src="<%= e.logo_url %>" width="64" height="64" alt="">
-                    </div>
-
-                    <div class="media-body">
-                      <h4 class="media-heading">
-                        <%= e.name.html %>
-                        <button type="button" class="btn btn-danger remove">X</button>
-                      </h4>
-                      <p><%= e.start.local %> | <%= e.id %></p>
-                      <!-- <p>
-                        <input type="file" name="<%= e.id %>" value="">
-                      </p> -->
-                    </div>
-
-                  </li>
-
-              <% } %>
-            </ul>
+                  <% }) %>
+                </ul>
+              </div>
+            </div>
 
             <!-- <input class="btn btn-primary" type="submit" name="submit" value="Submit"> -->
 

@@ -1,0 +1,33 @@
+<li class="media event" data-id="<%= e.id %>">
+
+  <button type="button" class="btn btn-danger btn-xs remove"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+
+  <!-- <div class="pull-left">
+    <img alt="" src="https://s3-eu-west-1.amazonaws.com/membership-eb-images/<%= e.id %>/300x180.png" width="107" height="64" />
+  </div> -->
+
+  <div class="pull-left">
+    <img src="<%= e.logo_url %>" width="64" height="64" alt="">
+  </div>
+
+  <div class="pull-left labels">
+    <% if (e.status != "live") { %>
+      <span class="label label-danger"><%= e.status %></span>
+    <% } else { %>
+      <span class="label label-primary"><%= e.status %></span>
+    <% } %>
+    <span class="label label-info"><%= e.id %></span>
+    <a href="<%= e.url %>" target="_blank" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-link"></span> View on EventBrite</a>
+  </div>
+
+  <div class="media-body">
+    <h4 class="media-heading">
+      <%= e.name.html %>
+    </h4>
+    <p><span class="date"><%= e.start.local %></span></p>
+    <!-- <p>
+      <input type="file" name="<%= e.id %>" value="">
+    </p> -->
+  </div>
+
+</li>

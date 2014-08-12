@@ -6,3 +6,41 @@ body {
 a {
   color: #00B7FF;
 }
+
+#eventsPriority {
+  height: 302px;
+  overflow: hidden;
+  margin: 0;
+}
+
+#eventsPriority .event .remove {
+  display: block;
+}
+
+.event {
+  position: relative;
+}
+
+.event:hover {
+  background-color: #ececec;
+  cursor: move;
+}
+
+.event .remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+}
+
+.labels .label,
+.labels .btn {
+  float: left;
+  clear: both;
+  margin-bottom: 4px;
+}
+
+.labels .label:last-child,
+.labels .btn:last-child {
+  margin: 0;
+}
