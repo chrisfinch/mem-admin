@@ -77,30 +77,55 @@ router.get('/', function(req, res) {
         Key: Config.orderJsonKey
       }, function (err, data) {
         var ordering = JSON.parse(data.Body.toString('utf-8')).order;
+        var priorityEvents = [];
 
-        events.sort(function (a, b) {
-          var aIndex = ordering.indexOf(a.id);
-          var bIndex = ordering.indexOf(b.id);
+        if (ordering) {
+          var priorityEvents = events.filter(function (event) {
+            if (ordering.indexOf(event.id) != -1) {
+              return true
+            }
+            return false
+          });
 
-          if (aIndex > bIndex) {
-            return 1;
-          } else if (aIndex < bIndex) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
+          priorityEvents.sort(function (a, b) {
+            var aIndex = ordering.indexOf(a.id);
+            var bIndex = ordering.indexOf(b.id);
+
+            if (aIndex > bIndex) {
+              return 1;
+            } else if (aIndex < bIndex) {
+              return -1;
+            } else {
+              return 0;
+            }
+          });
+
+          events = events.filter(function (event) {
+            if (ordering.indexOf(event.id) != -1) {
+              return false
+            }
+            return true
+          });
+        }
+
+      console.log("trying to render", priorityEvents, []);
 
         res.render('index', {
           title: 'Membership Admin',
-          events: events
+          events: events,
+          priorityEvents: priorityEvents
         });
 
       });
 
     } else {
       console.log(response.body.error);
-      res.send(500);
+      //res.send(500);
+      res.render('index', {
+        title: 'Membership Admin - Rate Limited.',
+        events: [],
+        priorityEvents: []
+      });
     }
 
   });
@@ -110,7 +135,8 @@ router.get('/', function(req, res) {
 router.post('/order', function (req, res) {
   s3OrderJsonUpload(req.body, function (err, data) {
     if (!err) {
-      res.redirect('back');
+      console.log("uploaded " + req.body.order + " to s3");
+      res.send(200);
     } else {
       console.log(err);
       res.send(500);
@@ -169,7 +195,7 @@ router.post('/upload', function (req, res) {
               });
             });
 
-            res.redirect('back');
+            res.send(200);
           }, function (err) {
             console.log("err: ", err)
           });
