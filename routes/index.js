@@ -108,8 +108,6 @@ router.get('/', function(req, res) {
           });
         }
 
-      console.log("trying to render", priorityEvents, []);
-
         res.render('index', {
           title: 'Membership Admin',
           events: events,
