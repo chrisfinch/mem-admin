@@ -6,6 +6,10 @@ $(function () {
     axis: "y",
     connectToSortable: "#eventsPriority",
     helper: "clone"
+  }).on("dragstart", function () {
+    $priorityEvents.addClass("droppable");
+  }).on("dragstop", function () {
+    $priorityEvents.removeClass("droppable");
   });
 
   $priorityEvents.sortable({
@@ -17,6 +21,7 @@ $(function () {
     crunchJsonAndSend();
   }).on("sortreceive", function (event, ui) {
     console.log("recieve", ui);
+    $priorityEvents.removeClass("droppable");
     if ($priorityEvents.find(".event").length < 5) {
       ui.item.remove();
       bindCancel($priorityEvents);
@@ -56,6 +61,10 @@ var bindCancel = function ($priorityEvents) {
         axis: "y",
         connectToSortable: "#eventsPriority",
         helper: "clone"
+      }).on("dragstart", function () {
+        $priorityEvents.addClass("droppable");
+      }).on("dragstop", function () {
+        $priorityEvents.removeClass("droppable");
       });
     $eventItem.remove();
     crunchJsonAndSend();
@@ -64,6 +73,6 @@ var bindCancel = function ($priorityEvents) {
 
 var parseDates = function () {
   $(".event .date").each(function (i, e) {
-    $(e).html(new Date($(e).text()).toLocaleString("en-GB"))
+    $(e).append("<span>" + new Date($(e).data("date")).toLocaleString("en-GB") + "</span>")
   });
 };

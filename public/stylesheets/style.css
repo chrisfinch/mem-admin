@@ -17,6 +17,10 @@ a {
   display: block;
 }
 
+#eventsPriority.droppable {
+  border: 1px dashed #000;
+}
+
 .event {
   position: relative;
 }
@@ -31,6 +35,14 @@ a {
   top: 0;
   right: 0;
   display: none;
+}
+
+.event.ui-draggable-dragging {
+  background-color: #f2f2f2;
+  border: 1px dashed #000000;
+  -moz-box-shadow: 3px 3px 20px #919191;
+	-webkit-box-shadow: 3px 3px 20px #919191;
+	box-shadow: 3px 3px 20px #919191;
 }
 
 .labels .label,
