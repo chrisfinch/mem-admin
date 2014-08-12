@@ -24,7 +24,14 @@
     <h4 class="media-heading">
       <%= e.name.html %>
     </h4>
-    <p><span class="date"><%= e.start.local %></span></p>
+    <p>
+      <span class="label label-default date" data-date="<%= e.start.local %>">
+        <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+      <span class="label label-default location">
+        <span class="glyphicon glyphicon-map-marker"></span> <%= e.venue.name %>
+      </span>
+    </p>
     <!-- <p>
       <input type="file" name="<%= e.id %>" value="">
     </p> -->
