@@ -9,7 +9,7 @@ module.exports = function (passport) {
           clientID: Config.google.web.client_id,
           clientSecret: Config.google.web.client_secret,
           scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
-          callbackURL: "http://localhost:3000/login/return",
+          callbackURL: Config.google.web.redirect_uris[0],
           passReqToCallback: true
         },
         function (req, accessToken, refreshToken, profile, done) {
