@@ -6,10 +6,10 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 module.exports = function (passport) {
 
     passport.use(new GoogleStrategy({
-          clientID: Config.google.web.dev_client_id,
-          clientSecret: Config.google.web.dev_client_secret,
+          clientID: Config.google.web.client_id,
+          clientSecret: Config.google.web.client_secret,
           scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
-          callbackURL: Config.google.web.dev_redirect_uris[0],
+          callbackURL: Config.google.web.redirect_uris[0],
           passReqToCallback: true
         },
         function (req, accessToken, refreshToken, profile, done) {
