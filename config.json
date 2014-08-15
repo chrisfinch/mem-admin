@@ -7,7 +7,7 @@
   "eventbriteApiEventListUrl": "/users/101063397097/owned_events/",
   "Bucket": "membership-eb-images",
   "orderJsonKey": "order/order.json",
-  "googleOauthDomain": "guardian.co.ukxx",
+  "googleOauthDomain": "guardian.co.uk",
   "google": {
     "web":{
       "auth_uri":"https://accounts.google.com/o/oauth2/auth",
