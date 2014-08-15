@@ -7,8 +7,9 @@ var all = require("node-promise").all;
 var fs = require('fs');
 var request = require('request');
 var easyimg = require('easyimage');
+var passport = require('passport');
 
-var s3 = require(__base + '/modules/s3');
+var s3 = require(__base + 'modules/s3');
 
 var ebUrl = function () {
   var s = [];
@@ -20,68 +21,88 @@ var ebUrl = function () {
   return s.join("");
 }
 
+//var url = "http://ec2-54-76-188-66.eu-west-1.compute.amazonaws.com";
+
+router.get('/login', function (req, res) {
+  res.render('login', { error: req.flash('error')});
+});
+
+router.get('/login/google', passport.authenticate('google'));
+
+router.get('/login/return', passport.authenticate('google', {
+      successRedirect: '/',
+      failureRedirect: '/login',
+      failureFlash: true
+  }));
+
+
 /* GET home page. */
 router.get('/', function(req, res) {
 
-  request({
-    url: ebUrl(),
-    json: true
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var events = body.events;
+    if (req.isAuthenticated()) {
 
-      s3.getOrderJson(function (err, data) {
-        var ordering = JSON.parse(data.Body.toString('utf-8')).order;
-        var priorityEvents = [];
+    request({
+      url: ebUrl(),
+      json: true
+    }, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var events = body.events;
 
-        if (ordering) {
-          var priorityEvents = events.filter(function (event) {
-            if (ordering.indexOf(event.id) != -1) {
-              return true
-            }
-            return false
-          });
+        s3.getOrderJson(function (err, data) {
+          var ordering = JSON.parse(data.Body.toString('utf-8')).order;
+          var priorityEvents = [];
 
-          priorityEvents.sort(function (a, b) {
-            var aIndex = ordering.indexOf(a.id);
-            var bIndex = ordering.indexOf(b.id);
-
-            if (aIndex > bIndex) {
-              return 1;
-            } else if (aIndex < bIndex) {
-              return -1;
-            } else {
-              return 0;
-            }
-          });
-
-          events = events.filter(function (event) {
-            if (ordering.indexOf(event.id) != -1) {
+          if (ordering) {
+            var priorityEvents = events.filter(function (event) {
+              if (ordering.indexOf(event.id) != -1) {
+                return true
+              }
               return false
-            }
-            return true
-          });
-        }
+            });
 
-        res.render('index', {
-          title: 'Membership Admin',
-          events: events,
-          priorityEvents: priorityEvents
+            priorityEvents.sort(function (a, b) {
+              var aIndex = ordering.indexOf(a.id);
+              var bIndex = ordering.indexOf(b.id);
+
+              if (aIndex > bIndex) {
+                return 1;
+              } else if (aIndex < bIndex) {
+                return -1;
+              } else {
+                return 0;
+              }
+            });
+
+            events = events.filter(function (event) {
+              if (ordering.indexOf(event.id) != -1) {
+                return false
+              }
+              return true
+            });
+          }
+
+          res.render('index', {
+            title: 'Membership Admin',
+            events: events,
+            priorityEvents: priorityEvents,
+            error: null
+          });
+
         });
 
-      });
+      } else {
+        res.render('index', {
+          title: 'Membership Admin - Rate Limited.',
+          events: [],
+          priorityEvents: [],
+          error: null
+        });
+      }
 
-    } else {
-      console.log(response.body.error);
-      //res.send(500);
-      res.render('index', {
-        title: 'Membership Admin - Rate Limited.',
-        events: [],
-        priorityEvents: []
-      });
-    }
-
-  });
+    });
+  } else {
+    res.redirect("/login");
+  }
 
 });
 

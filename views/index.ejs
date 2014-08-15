@@ -14,7 +14,7 @@
       | $$ | $$ | $$ \$$     \| $$ | $$ | $$        \$$    $$ \$$    $$| $$ | $$ | $$| $$| $$  | $$
        \$$  \$$  \$$  \$$$$$$$ \$$  \$$  \$$         \$$$$$$$  \$$$$$$$ \$$  \$$  \$$ \$$ \$$   \$$
 
-      ~~~ Hacked Together in August 2014 by Chris Finch @ The Guardian. ~~~        
+      ~~~ Hacked Together in August 2014 by Chris Finch @ The Guardian. ~~~
 
     -->
 
@@ -32,6 +32,10 @@
 
     <div class="container-fluid">
 
+      <% if (error) { %>
+        <h1><%= error %></h1>
+      <% } %>
+      
       <div class="row">
         <div class="page-header">
           <h1>Membership admin <small>Event management</small></h1>
