@@ -32,6 +32,19 @@ $(function () {
     }
   });
 
+
+  $(".new-image").popover({
+    html: true,
+    title: "Event image upload",
+    content: function() {
+      return $(".image-upload", $(this).parents(".event")).html();
+    }
+  }).on("shown.bs.popover", function (event) {
+    this.$popover = $(event.target).siblings(".popover")
+    this.$popover.find("form").on("submit", bindUploadForm.bind(this));
+  });
+
+
   parseDates();
 
   bindCancel($priorityEvents);
@@ -75,4 +88,72 @@ var parseDates = function () {
   $(".event .date").each(function (i, e) {
     $(e).append("<span>" + new Date($(e).data("date")).toLocaleString("en-GB") + "</span>")
   });
+};
+
+var bindUploadForm = function (event) {
+  event.preventDefault();
+  var self = this;
+  var $form = $(event.target);
+  var file = $form.find(".upload-input")[0].files[0];
+
+  if (file) {
+    $form.find('.spinner').css('display', 'inline-block');
+
+    var name = $form.find(".upload-input").attr("name");
+    var data = new FormData();
+    data.append(name, file);
+
+    // cache image base64 to check against
+    var img = self.$popover.parents(".event").find("img")[0];
+    var imageBase64 = getBase64Image(img);
+
+    $.ajax({
+      type: "POST",
+      url: "/upload",
+      data: data,
+      cache: false,
+      contentType: false,
+      processData : false
+    }).done(function success () {
+      $form.find('.spinner').hide(); // Hide spinner
+      self.$popover.popover("hide"); // Hide popover
+
+      // Refresh image
+      var ticks = 0;
+      var interval = setInterval(function () { // arbitrary timeout to allow s3 to propagate image
+        img.src = img.src;
+        ticks++;
+        if (getBase64Image(img) !== imageBase64 || ticks >= 120) { // Retry for 1 min max
+          clearInterval(interval);
+        }
+      }, 500);
+
+    }).fail(function fail () {
+      alert("Upload failed, please retry.");
+      self.$popover.popover("hide");
+    });
+
+  } else {
+    alert("Please choose a file to upload.");
+  }
+
+};
+
+var getBase64Image = function (img) {
+    // Create an empty canvas element
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    // Get the data-URL formatted image
+    // Firefox supports PNG and JPEG. You could check img.src to
+    // guess the original format, but be aware the using "image/jpg"
+    // will re-encode the image.
+    var dataURL = canvas.toDataURL("image/png");
+
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 };

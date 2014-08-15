@@ -135,6 +135,11 @@ router.post('/upload', function (req, res) {
           all([
             easyimg.resize({
               src: path,
+              dst:__dirname + '/../public/uploads/64'+'.png',
+              width: 64
+            }),
+            easyimg.resize({
+              src: path,
               dst:__dirname + '/../public/uploads/300x180'+'.png',
               width: 300,
               height: 180

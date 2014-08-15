@@ -20,6 +20,7 @@
 
     <script src="/javascripts/jquery-2.1.1.min.js"></script>
     <script src="/javascripts/jquery-ui.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/javascripts/script.js"></script>
 
     <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
@@ -35,7 +36,7 @@
       <% if (error) { %>
         <h1><%= error %></h1>
       <% } %>
-      
+
       <div class="row">
         <div class="page-header">
           <h1>Membership admin <small>Event management</small></h1>
@@ -55,41 +56,35 @@
 
       <div class="row">
 
-        <form id="form_id" action="/upload" method="post" enctype="multipart/form-data">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-star-empty"></span> Priority Events</h3>
+          </div>
+          <div class="panel-body">
+            <ul id="eventsPriority" class="events-list">
+              <% priorityEvents.forEach(function (e){ %>
 
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title"><span class="glyphicon glyphicon-star-empty"></span> Priority Events</h3>
-              </div>
-              <div class="panel-body">
-                <ul id="eventsPriority" class="media-list">
-                  <% priorityEvents.forEach(function (e){ %>
+                <% include events/event %>
 
-                    <% include events/event %>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
 
-                  <% }) %>
-                </ul>
-              </div>
-            </div>
+        <div class="panel panel-warning">
+          <div class="panel-heading">
+            <h3 class="panel-title">Standard Events</h3>
+          </div>
+          <div class="panel-body">
+            <ul id="eventsBin" class="events-list">
+              <% events.forEach(function (e){ %>
 
-            <div class="panel panel-warning">
-              <div class="panel-heading">
-                <h3 class="panel-title">Standard Events</h3>
-              </div>
-              <div class="panel-body">
-                <ul id="eventsBin" class="media-list">
-                  <% events.forEach(function (e){ %>
+                <% include events/event %>
 
-                    <% include events/event %>
-
-                  <% }) %>
-                </ul>
-              </div>
-            </div>
-
-            <!-- <input class="btn btn-primary" type="submit" name="submit" value="Submit"> -->
-
-        </form>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
 
       </div>
 
