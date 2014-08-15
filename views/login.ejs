@@ -1,0 +1,30 @@
+<html>
+
+  <head>
+    <title>Mem Admin | Login</title>
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="row">
+
+        <div class="page-header">
+          <h1>Membership Admin <small>Login</small></h1>
+        </div>
+
+        <% if (error && error.length > 0) { %>
+          <div class="alert alert-danger" role="alert">
+            <strong><%= error %></strong>
+          </div>
+        <% } %>
+
+        <a href="/login/google" class="btn btn-primary btn-lg">Sign in with google</a>
+
+      </div>
+
+    </div>
+  </body>
+
+</html>

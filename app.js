@@ -5,8 +5,12 @@ var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
+var passport = require('passport');
+var passportConf = require('./config/passport');
+var flash = require('connect-flash');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,9 +25,14 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(cookieParser("scdisecuyawebifucywr78"));
+app.use(session({ secret: "345o3t03utv9uchvpieuhv", cookie: { maxAge: 3600000 } }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(busboy()); // file uploads
+app.use(busboy());
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 app.use('/', routes);
 app.use('/users', users);
@@ -34,6 +43,8 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+passportConf(passport);
 
 /// error handlers
 
