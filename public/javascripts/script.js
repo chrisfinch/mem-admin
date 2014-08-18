@@ -105,7 +105,7 @@ var bindUploadForm = function (event) {
 
     // cache image base64 to check against
     var img = self.$popover.parents(".event").find("img")[0];
-    $(img)parent().addClass("loading");
+    $(img).parent().addClass("loading");
     var imageBase64 = getBase64Image(img);
 
     $.ajax({
@@ -125,7 +125,7 @@ var bindUploadForm = function (event) {
         img.src = img.src;
         ticks++;
         if (getBase64Image(img) !== imageBase64 || ticks >= 120) { // Retry for 1 min max
-          $(img)parent().removeClass("loading");
+          $(img).parent().removeClass("loading");
           clearInterval(interval);
         }
       }, 500);
