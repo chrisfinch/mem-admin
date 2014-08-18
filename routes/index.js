@@ -50,7 +50,7 @@ router.get('/', function(req, res) {
         var events = body.events;
 
         s3.getOrderJson(function (err, data) {
-          if (data && data.body) { var ordering = JSON.parse(data.Body.toString('utf-8')).order; }
+          if (data && data.Body) { var ordering = JSON.parse(data.Body.toString('utf-8')).order; }
           var priorityEvents = [];
 
           if (ordering) {
