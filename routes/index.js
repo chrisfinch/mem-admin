@@ -175,7 +175,7 @@ router.post('/upload', function (req, res) {
               n = n.length > 1 ? n[1] : n[0]; // workaround for https://github.com/hacksparrow/node-easyimage/issues/32
               var filePath = __dirname + '/../public/uploads/' + n;
               var stream = fs.createReadStream(filePath);
-              s3.imageUpload(stream, fieldname, result.name, function () {
+              s3.imageUpload(stream, fieldname, n, function () {
                 fs.unlink(filePath);
               });
             });
