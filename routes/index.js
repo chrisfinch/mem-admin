@@ -150,7 +150,7 @@ router.post('/upload', function (req, res) {
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/300-1x'+'.png',
+              dst:__dirname + '/../public/uploads/300'+'.png',
               width: 300,
               height: 180
             }),
@@ -162,7 +162,7 @@ router.post('/upload', function (req, res) {
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/460-1x' + '.png',
+              dst:__dirname + '/../public/uploads/460' + '.png',
               width: 460,
               height: 276
             }),
