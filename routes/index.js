@@ -144,25 +144,25 @@ router.post('/upload', function (req, res) {
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/300x180'+'.png',
+              dst:__dirname + '/../public/uploads/300-1x'+'.png',
               width: 300,
               height: 180
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/300x180-2x' + '.png',
+              dst:__dirname + '/../public/uploads/300-2x' + '.png',
               width: 600,
               height: 360
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/460x276' + '.png',
+              dst:__dirname + '/../public/uploads/460-1x' + '.png',
               width: 460,
               height: 276
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/460x276-2x' + '.png',
+              dst:__dirname + '/../public/uploads/460-2x' + '.png',
               width: 920,
               height: 552
             })
