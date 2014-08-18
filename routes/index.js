@@ -45,6 +45,7 @@ router.get('/', function(req, res) {
       url: ebUrl(),
       json: true
     }, function (error, response, body) {
+
       if (!error && response.statusCode == 200) {
         var events = body.events;
 
@@ -91,11 +92,14 @@ router.get('/', function(req, res) {
         });
 
       } else {
+
+        var error = body.status_code == 429 ? "Hit eventbrite rate limit - please try again in a while." : body.error_description;
+
         res.render('index', {
           title: 'Membership Admin - Rate Limited.',
           events: [],
           priorityEvents: [],
-          error: null
+          error: error
         });
       }
 
