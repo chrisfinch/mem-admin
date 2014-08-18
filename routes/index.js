@@ -93,7 +93,13 @@ router.get('/', function(req, res) {
 
       } else {
 
-        var error = body.status_code == 429 ? "Hit eventbrite rate limit - please try again in a while." : body.error_description;
+        var error;
+
+        if (body) {
+          error = body.status_code == 429 ? "Hit eventbrite rate limit - please try again in a while." : body.error_description;
+        } else {
+          error = error.toString();
+        }
 
         res.render('index', {
           title: 'Membership Admin - Rate Limited.',
