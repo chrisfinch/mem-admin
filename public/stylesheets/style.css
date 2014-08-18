@@ -33,6 +33,7 @@ a {
 
 .event .event-image {
   min-width: 64px;
+  position: relative;
 }
 
 .event:first-child {
@@ -91,6 +92,27 @@ a {
   -moz-animation: spin 3s infinite linear;
   -o-animation: spin 3s infinite linear;
   animation: spin 3s infinite linear;
+}
+
+.event-image .spinner {
+  display: none;
+}
+
+.event-image.loading .spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: #aaaaaa;
+  text-align: center;
+}
+
+.event-image.loading .spinner span {
+  color: #ffffff;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 @-moz-keyframes spin {
