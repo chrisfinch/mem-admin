@@ -143,8 +143,8 @@
             "Properties" : {
                 "Listeners" : [ {
                     "LoadBalancerPort": "443",
-                    "InstancePort": 9000,
-                    "Protocol": "HTTPS"
+                    "InstancePort": 80,
+                    "Protocol": "HTTP"
                 }],
                 "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
                 "Subnets" : { "Ref" : "Subnets" },
