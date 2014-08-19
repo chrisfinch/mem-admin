@@ -90,7 +90,7 @@
 
                         "unzip -d /eventbriteImages /tmp/app.zip",
 
-                        "cp /eventbriteImages/cloud-formation/node-mem-admin.conf /etc/nginx/conf.d/",
+                        "cp /eventbriteImages/prod-config/node-mem-admin.conf /etc/nginx/conf.d/",
 
                         "sudo /etc/init.d/nginx restart",
 
@@ -144,8 +144,7 @@
                 "Listeners" : [ {
                     "LoadBalancerPort": "443",
                     "InstancePort": 9000,
-                    "Protocol": "HTTPS",
-                    "SSLCertificateId" : { "Fn::Join" : [ "", [ "arn:aws:iam::", {"Ref":"AWS::AccountId"}, ":server-certificate/", { "Ref" : "SiteDomain" } ] ] }
+                    "Protocol": "HTTPS"
                 }],
                 "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
                 "Subnets" : { "Ref" : "Subnets" },

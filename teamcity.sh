@@ -6,7 +6,7 @@ mkdir public/uploads
 
 mkdir -p target/packages/eventbriteImages
 
-zip -rv target/packages/eventbriteImages/app.zip bin config modules node_modules public routes views app.js package.json server.sh
+zip -rv target/packages/eventbriteImages/app.zip bin config modules node_modules public routes views app.js package.json server.sh prod-config
 
 cp deploy.json target/
 
