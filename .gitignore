@@ -15,3 +15,7 @@ build
 node_modules
 
 config.json
+
+public/uploads
+
+target

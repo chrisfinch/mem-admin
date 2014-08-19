@@ -1,0 +1,17 @@
+{
+  "packages": {
+    "eventbriteImages": {
+      "type": "aws-s3",
+      "data": {
+        "bucket": "membership-dist"
+      }
+    }
+  },
+  "recipes": {
+    "default": {
+      "actions": [
+        "eventbriteImages.uploadStaticFiles"
+      ]
+    }
+  }
+}
