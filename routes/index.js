@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var Config = require(__base + '/config.json');
+var Config = require(__base + '/eventbriteImages-config.json');
 
 var all = require("node-promise").all;
 var fs = require('fs');
