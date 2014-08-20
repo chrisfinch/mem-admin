@@ -2,7 +2,7 @@
   "defaultStacks": ["membership"],
   "packages": {
     "memb-eventbriteImages": {
-      "type": "aws-s3",
+      "type": "autoscaling",
       "data": {
         "bucket": "membership-dist",
         "cacheControl": "private",
