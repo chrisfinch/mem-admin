@@ -3,7 +3,10 @@
     "eventbriteImages": {
       "type": "aws-s3",
       "data": {
-        "bucket": "membership-dist"
+        "bucket": "membership-dist",
+        "cacheControl": "private",
+        "prefixPackage": false,
+        "prefixStage": false
       }
     }
   },
