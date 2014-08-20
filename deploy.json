@@ -12,10 +12,11 @@
     }
   },
   "recipes": {
-    "default": {
-      "actions": [
-        "memb-eventbriteImages.uploadStaticFiles"
-      ]
-    }
+    "default":{
+        "actionsBeforeApp": ["memb-eventbriteImages.uploadArtifacts", "memb-eventbriteImages.deploy"]
+    },
+    "artifactUploadOnly": {
+       "actions": [ "memb-eventbriteImages.uploadArtifacts" ]
+   }
   }
 }

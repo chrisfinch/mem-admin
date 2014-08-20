@@ -80,7 +80,7 @@
                         "#!/bin/bash -ev",
                         {"Fn::Join":["", ["wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/authorized_keys &"]]},
 
-                        {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
+                        {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/memb-eventbriteImages/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
 
