@@ -23,6 +23,10 @@ var ebUrl = function () {
 
 //var url = "http://ec2-54-76-188-66.eu-west-1.compute.amazonaws.com";
 
+router.get('/healthcheck', function (req, res) {
+  res.send(200);
+});
+
 router.get('/login', function (req, res) {
   res.render('login', { error: req.flash('error')});
 });
