@@ -15,7 +15,7 @@
         "Stack": {
             "Description": "Applied directly as a tag ('membership', or 'memb-masterclasses')",
             "Type": "String",
-            "Default": "memb-eventbriteImages"
+            "Default": "membership"
         },
         "KeyName" : {
             "Description" : "The EC2 Key Pair to allow SSH access to the instance",
@@ -39,8 +39,8 @@
         "InstanceType" : {
             "Description" : "EC2 instance type",
             "Type" : "String",
-            "Default" : "t1.micro",
-            "AllowedValues" : [ "t1.micro"],
+            "Default" : "t2.micro",
+            "AllowedValues" : [ "t2.micro"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         }
     },
@@ -69,7 +69,7 @@
         "EventbriteImagesLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-ba9a44cd",
+                "ImageId" : "ami-3e984649",
                 "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
