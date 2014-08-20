@@ -68,7 +68,7 @@
         "EventbriteImagesLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-f154ae86",
+                "ImageId" : "ami-ba9a44cd",
                 "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
@@ -79,9 +79,6 @@
                         "#!/bin/bash -ev",
                         {"Fn::Join":["", ["wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/authorized_keys &"]]},
 
-                        "sudo yum update",
-                        "sudo yum install ImageMagick nginx",
-
                         {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
@@ -89,12 +86,6 @@
                         "wget -i /etc/gu-artifact-url --directory-prefix=/tmp",
 
                         "unzip -d /eventbriteImages /tmp/app.zip",
-
-                        "cp /eventbriteImages/prod-config/node-mem-admin.conf /etc/nginx/conf.d/",
-
-                        "sudo /etc/init.d/nginx restart",
-
-                        "npm install -g forever",
 
                         "/eventbriteImages/server.sh"
                     ]]
