@@ -85,9 +85,9 @@
 
                         "wget -i /etc/gu-artifact-url --directory-prefix=/tmp",
 
-                        "unzip -d /eventbriteImages /tmp/app.zip",
+                        "unzip -d /memb-eventbriteImages /tmp/app.zip",
 
-                        "/eventbriteImages/server.sh"
+                        "/memb-eventbriteImages/server.sh"
                     ]]
                 }}
             }
