@@ -1,4 +1,5 @@
 {
+  "defaultStacks": ["membership"],
   "packages": {
     "memb-eventbriteImages": {
       "type": "aws-s3",
