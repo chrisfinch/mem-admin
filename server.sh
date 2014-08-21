@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pm2 start bin/www -i max
+HOME=/home/ubuntu pm2 start bin/www -i max
