@@ -172,10 +172,17 @@ router.post('/upload', function (req, res) {
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/460-2x' + '.png',
-              width: 920,
-              height: 552
-            })
+              dst:__dirname + '/../public/uploads/940' + '.png',
+              width: 940,
+              height: 564
+            }),
+            easyimg.resize({
+              src: path,
+              dst:__dirname + '/../public/uploads/940-2x' + '.png',
+              width: 1880,
+              height: 1128
+            }),
+
           ]).then(function (results) {
 
             originalFileStream = fs.createReadStream(path);
