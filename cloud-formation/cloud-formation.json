@@ -136,8 +136,8 @@
             "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
             "Properties" : {
                 "Listeners" : [ {
-                    "LoadBalancerPort": "443",
-                    "InstancePort": 80,
+                    "LoadBalancerPort": "80",
+                    "InstancePort": "3000",
                     "Protocol": "HTTP"
                 }],
                 "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
@@ -159,12 +159,7 @@
                 "SecurityGroupIngress" : [
                     { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": { "Ref" : "AllowedIngressIps" } },
                     { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.158.92/32" },
-                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.146.68/32" },
-                    { "IpProtocol": "tcp", "FromPort": "3000",  "ToPort": "3000",  "CidrIp": "80.254.146.68/32" }
-                ],
-                "SecurityGroupEgress" : [
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": "3000",  "ToPort": "3000",  "CidrIp": "80.254.146.68/32" }
+                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.146.68/32" }
                 ]
             }
         },
@@ -176,8 +171,7 @@
                 "SecurityGroupIngress" : [
                     { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "77.91.248.0/21" },
                     { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "77.91.248.0/21" },
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } },
-                    { "IpProtocol": "tcp", "FromPort": "3000",  "ToPort": "3000",  "CidrIp": "77.91.248.0/21" }
+                    { "IpProtocol": "tcp", "FromPort": "3000", "ToPort": "3000", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } }
                 ]
             }
         },
