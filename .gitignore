@@ -14,7 +14,7 @@ build
 
 node_modules
 
-config.json
+eventbriteImages-config.json
 
 public/uploads
 
