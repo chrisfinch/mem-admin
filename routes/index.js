@@ -143,7 +143,7 @@ router.post('/upload', function (req, res) {
 
         fstream = fs.createWriteStream(path);
 
-        file.pipe(fstream);300/180
+        file.pipe(fstream);
 
         fstream.on('close', function () {
           all([
@@ -178,7 +178,11 @@ router.post('/upload', function (req, res) {
             })
           ]).then(function (results) {
 
-            fs.unlink(path);
+            originalFileStream = fs.createReadStream(path);
+
+            s3.imageUpload(originalFileStream, fieldname, filename, function () {
+              fs.unlink(path);
+            });
 
             results.forEach(function (result) {
               var n = result.name.split(" ");
