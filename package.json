@@ -13,7 +13,7 @@
     "cookie-parser": "~1.0.1",
     "cookie-session": "^1.0.2",
     "debug": "~0.7.4",
-    "easyimage": "^1.0.1",
+    "easyimage": "^1.0.2",
     "ejs": "~0.8.5",
     "express": "~4.2.0",
     "express-session": "^1.7.5",
