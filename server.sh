@@ -1,3 +1,3 @@
 #!/bin/bash
 
-forever start -o ~/mem-admin/forever-server.log bin/www
+pm2 start bin/www -i max --output server-logs.log

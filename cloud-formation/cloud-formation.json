@@ -69,7 +69,7 @@
         "EventbriteImagesLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-3e984649",
+                "ImageId" : "ami-02db0575",
                 "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
@@ -87,6 +87,8 @@
                         "wget -i /etc/gu-artifact-url --directory-prefix=/tmp",
 
                         "unzip -d /memb-eventbriteImages /tmp/app.zip",
+
+                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/PROD/eventbriteImages-config.json /memb-eventbriteImages"]]},
 
                         "/memb-eventbriteImages/server.sh"
                     ]]
@@ -157,10 +159,12 @@
                 "SecurityGroupIngress" : [
                     { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": { "Ref" : "AllowedIngressIps" } },
                     { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.158.92/32" },
-                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.146.68/32" }
+                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.146.68/32" },
+                    { "IpProtocol": "tcp", "FromPort": "3000",  "ToPort": "3000",  "CidrIp": "80.254.146.68/32" }
                 ],
                 "SecurityGroupEgress" : [
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0" }
+                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0" },
+                    { "IpProtocol": "tcp", "FromPort": "3000",  "ToPort": "3000",  "CidrIp": "80.254.146.68/32" }
                 ]
             }
         },
@@ -172,7 +176,8 @@
                 "SecurityGroupIngress" : [
                     { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "77.91.248.0/21" },
                     { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "77.91.248.0/21" },
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } }
+                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } },
+                    { "IpProtocol": "tcp", "FromPort": "3000",  "ToPort": "3000",  "CidrIp": "77.91.248.0/21" }
                 ]
             }
         },
