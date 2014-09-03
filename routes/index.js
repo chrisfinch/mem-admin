@@ -134,14 +134,10 @@ router.post('/order', function (req, res) {
 
 router.post('/upload', function (req, res) {
 
-console.log("upload-----");
-
     var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename, encoding, contentType) {
       if (file && filename) {
-
-        console.log("file----")
 
         var path = __dirname + '/../public/uploads/' + filename;
 
@@ -217,12 +213,8 @@ console.log("upload-----");
               var n = result.name.split(" ");
               n = n.length > 1 ? n[1] : n[0];
               var filePath = __dirname + '/../public/uploads/' + n;
-
-              console.log("trying: ", n)
-
               var stream = fs.createReadStream(filePath);
               s3.imageUpload(stream, fieldname, n, function () {
-                console.log("uploaded: ", n, arguments)
                 fs.unlink(filePath);
               });
             });
