@@ -134,10 +134,14 @@ router.post('/order', function (req, res) {
 
 router.post('/upload', function (req, res) {
 
+console.log("upload-----");
+
     var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename, encoding, contentType) {
       if (file && filename) {
+
+        console.log("file----")
 
         var path = __dirname + '/../public/uploads/' + filename;
 
@@ -149,54 +153,54 @@ router.post('/upload', function (req, res) {
           all([
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/64'+'.png',
+              dst:__dirname + '/../public/uploads/64'+'.jpg',
               width: 64
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/300'+'.png',
+              dst:__dirname + '/../public/uploads/300'+'.jpg',
               width: 300,
               height: 180
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/300-2x' + '.png',
+              dst:__dirname + '/../public/uploads/300-2x' + '.jpg',
               width: 600,
               height: 360
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/460' + '.png',
+              dst:__dirname + '/../public/uploads/460' + '.jpg',
               width: 460,
               height: 276
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/460-2x' + '.png',
+              dst:__dirname + '/../public/uploads/460-2x' + '.jpg',
               width: 920,
               height: 552
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/620' + '.png',
+              dst:__dirname + '/../public/uploads/620' + '.jpg',
               width: 620,
               height: 372
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/620-2x' + '.png',
+              dst:__dirname + '/../public/uploads/620-2x' + '.jpg',
               width: 1240,
               height: 744
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/940' + '.png',
+              dst:__dirname + '/../public/uploads/940' + '.jpg',
               width: 940,
               height: 564
             }),
             easyimg.resize({
               src: path,
-              dst:__dirname + '/../public/uploads/940-2x' + '.png',
+              dst:__dirname + '/../public/uploads/940-2x' + '.jpg',
               width: 1880,
               height: 1128
             }),
@@ -213,8 +217,12 @@ router.post('/upload', function (req, res) {
               var n = result.name.split(" ");
               n = n.length > 1 ? n[1] : n[0];
               var filePath = __dirname + '/../public/uploads/' + n;
+
+              console.log("trying: ", n)
+
               var stream = fs.createReadStream(filePath);
               s3.imageUpload(stream, fieldname, n, function () {
+                console.log("uploaded: ", n, arguments)
                 fs.unlink(filePath);
               });
             });
