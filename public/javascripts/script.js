@@ -150,6 +150,11 @@ var bindUploadForm = function (event) {
 };
 
 var getBase64Image = function (img) {
+
+    if (!img.src.length > 0) {
+      return false;
+    }
+
     // Create an empty canvas element
     var canvas = document.createElement("canvas");
     canvas.width = img.width;
