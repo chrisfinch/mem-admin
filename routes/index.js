@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var Config = require(__base + '/eventbriteImages-config.json');
+var Config = require('../eventbriteImages-config.json');
 
 var all = require("node-promise").all;
 var fs = require('fs');
@@ -9,7 +9,7 @@ var request = require('request');
 var easyimg = require('easyimage');
 var passport = require('passport');
 
-var s3 = require(__base + 'modules/s3');
+var s3 = require('../modules/s3');
 
 var ebUrl = function () {
   var s = [];
