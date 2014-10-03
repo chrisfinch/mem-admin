@@ -108,7 +108,6 @@ var bindUploadForm = function (event) {
         // cache image base64 to check against
         var img = self.$popover.parents(".event").find("img")[0];
         $(img).parent().addClass("loading");
-        var imageBase64 = getBase64Image(img);
 
         $.ajax({
           type: "POST",
@@ -121,16 +120,10 @@ var bindUploadForm = function (event) {
           $form.find('.spinner').hide(); // Hide spinner
           self.$popover.popover("hide"); // Hide popover
 
-          // Refresh image
-          var ticks = 0;
-          var interval = setInterval(function () { // arbitrary timeout to allow s3 to propagate image
-            img.src = img.src;
-            ticks++;
-            if (getBase64Image(img) !== imageBase64 || ticks >= 120) { // Retry for 1 min max
-              $(img).parent().removeClass("loading");
-              clearInterval(interval);
-            }
-          }, 500);
+            //remove spinner
+            setTimeout(function(){
+                $(img).parent().removeClass("loading");
+            }, 30000);
 
         }).fail(function fail () {
           alert("Upload failed, please retry.");
@@ -147,30 +140,6 @@ var bindUploadForm = function (event) {
     alert("Please choose a file to upload.");
   }
 
-};
-
-var getBase64Image = function (img) {
-
-    if (!img.src.length > 0) {
-      return false;
-    }
-
-    // Create an empty canvas element
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Copy the image contents to the canvas
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    // Get the data-URL formatted image
-    // Firefox supports PNG and JPEG. You could check img.src to
-    // guess the original format, but be aware the using "image/jpg"
-    // will re-encode the image.
-    var dataURL = canvas.toDataURL("image/png");
-
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 };
 
 var checkFile = function (file, callback) { // check an images aspect ratio using the HTML5 file api
