@@ -108,7 +108,7 @@ var bindUploadForm = function (event) {
         // cache image base64 to check against
         var img = self.$popover.parents(".event").find("img")[0];
         $(img).parent().addClass("loading");
-        var imageBase64 = getBase64Image(img);
+        var imageBase64;
 
         $.ajax({
           type: "POST",
@@ -122,6 +122,7 @@ var bindUploadForm = function (event) {
           self.$popover.popover("hide"); // Hide popover
 
           // Refresh image
+          imageBase64 = getBase64Image(img);
           var ticks = 0;
           var interval = setInterval(function () { // arbitrary timeout to allow s3 to propagate image
             img.src = img.src;
