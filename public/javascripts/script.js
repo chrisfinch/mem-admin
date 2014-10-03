@@ -120,10 +120,10 @@ var bindUploadForm = function (event) {
           $form.find('.spinner').hide(); // Hide spinner
           self.$popover.popover("hide"); // Hide popover
 
-            //remove spinner
-            setTimeout(function(){
-                $(img).parent().removeClass("loading");
-            }, 30000);
+          //remove loading spinner
+          setTimeout(function(){
+            $(img).parent().removeClass("loading");
+          }, 5000);
 
         }).fail(function fail () {
           alert("Upload failed, please retry.");
