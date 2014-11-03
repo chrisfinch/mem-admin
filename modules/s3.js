@@ -7,34 +7,24 @@ AWS.config.secretAccessKey = Config.secretAccessKey;
 AWS.config.region = Config.region;
 
 var s3Bucket = new AWS.S3({params: {Bucket: Config.Bucket}});
-var s3MultiPartUploader = require('s3-upload-stream').Uploader;
 
 var s3 = {};
 
 s3.imageUpload = function (fileStream, path, filename, callback) {
-  var s3 = new s3MultiPartUploader(
-    {
-      "accessKeyId": Config.accessKeyId,
-      "secretAccessKey": Config.secretAccessKey,
-      "region": Config.region
-    },
-    {
-      "Bucket": Config.Bucket,
-      "Key": path + "/" + filename,
-      "ACL": "public-read",
-    },
-    function (err, uploadStream)
-    {
-      if(err)
-        console.log(err, uploadStream);
-      else
-      {
-        uploadStream.on('uploaded', callback);
-
-        fileStream.pipe(uploadStream);
-      }
+  var data = {
+    'Bucket': Config.Bucket,
+    'Key': path + '/' + filename,
+    'ACL': 'public-read',
+    'ContentType': 'image/jpeg',
+    'Body': fileStream
+  };
+  s3Bucket.putObject(data, function (err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      callback();
     }
-  );
+  });
 };
 
 s3.orderJsonUpload = function (json, callback) {
