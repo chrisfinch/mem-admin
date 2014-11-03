@@ -151,3 +151,11 @@ a {
     transform: rotate(360deg);
   }
 }
+
+.group-title {
+    margin-bottom: 30px;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 4px;
+    color: #777777;
+}
