@@ -52,6 +52,11 @@ router.get('/', function(req, res) {
 
       if (!error && response.statusCode == 200) {
         var events = body.events;
+        var eventGroups = {
+            live: [],
+            draft: [],
+            canceled: []
+        };
 
         s3.getOrderJson(function (err, data) {
           if (data && data.Body) { var ordering = JSON.parse(data.Body.toString('utf-8')).order; }
