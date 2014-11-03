@@ -1,4 +1,4 @@
-var Config = require(__base + '/eventbriteImages-config.json');
+var Config = require('../eventbriteImages-config.json');
 
 var AWS = require('aws-sdk');
 

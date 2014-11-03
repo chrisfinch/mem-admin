@@ -1,6 +1,6 @@
 'use strict';
 
-var Config = require(__base + '/eventbriteImages-config.json');
+var Config = require('../eventbriteImages-config.json');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 module.exports = function (passport) {
