@@ -84,16 +84,23 @@ router.get('/', function(req, res) {
             });
 
             events = events.filter(function (event) {
-              if (ordering.indexOf(event.id) != -1) {
+              //filter out completed and ids not in ordering array
+              if ((ordering.indexOf(event.id) != -1) || event.status === 'completed') {
                 return false
               }
               return true
+            });
+
+            events.map(function(event){
+              if (eventGroups[event.status]) {
+                eventGroups[event.status].push(event);
+              }
             });
           }
 
           res.render('index', {
             title: 'Membership Admin',
-            events: events,
+            eventGroups: eventGroups,
             priorityEvents: priorityEvents,
             error: null
           });
