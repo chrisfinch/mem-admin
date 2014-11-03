@@ -78,11 +78,12 @@
           </div>
           <div class="panel-body">
             <ul id="eventsBin" class="events-list">
-              <% events.forEach(function (e){ %>
-
-                <% include events/event %>
-
-              <% }) %>
+              <% for(group in eventGroups){ %>
+                <h4 class="group-title"><%= group[0].toUpperCase() + group.slice(1) %></h4>
+                <% eventGroups[group].forEach(function (e){ %>
+                    <% include events/event %>
+                <% }) %>
+              <% } %>
             </ul>
           </div>
         </div>
