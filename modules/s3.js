@@ -16,7 +16,8 @@ s3.imageUpload = function (fileStream, path, filename, callback) {
     'Key': path + '/' + filename,
     'ACL': 'public-read',
     'ContentType': 'image/jpeg',
-    'Body': fileStream
+    'Body': fileStream,
+    'CacheControl': Config.cacheControl
   };
   s3Bucket.putObject(data, function (err, data) {
     if (err) {
