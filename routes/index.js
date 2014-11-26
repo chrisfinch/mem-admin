@@ -162,55 +162,64 @@ router.post('/upload', function (req, res) {
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/64'+'.jpg',
-              width: 64
+              width: 64,
+              quality: 40
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/300'+'.jpg',
               width: 300,
-              height: 180
+              height: 180,
+              quality: 40
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/300-2x' + '.jpg',
               width: 600,
-              height: 360
+              height: 360,
+              quality: 40
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/460' + '.jpg',
               width: 460,
-              height: 276
+              height: 276,
+              quality: 40
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/460-2x' + '.jpg',
               width: 920,
-              height: 552
+              height: 552,
+              quality: 60
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/620' + '.jpg',
               width: 620,
-              height: 372
+              height: 372,
+              quality: 40
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/620-2x' + '.jpg',
               width: 1240,
-              height: 744
+              height: 744,
+              quality: 60
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/940' + '.jpg',
               width: 940,
-              height: 564
+              height: 564,
+              quality: 60
             }),
             easyimg.resize({
               src: path,
               dst:__dirname + '/../public/uploads/940-2x' + '.jpg',
               width: 1880,
-              height: 1128
+              height: 1128,
+              quality: 60
             }),
 
           ]).then(function (results) {
