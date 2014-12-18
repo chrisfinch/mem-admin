@@ -1,27 +1,21 @@
 var express = require('express');
 var router = express.Router();
-
 var Config = require('../eventbriteImages-config.json');
 
 var all = require("node-promise").all;
+var Q = require('q');
 var fs = require('fs');
 var request = require('request');
 var easyimg = require('easyimage');
 var passport = require('passport');
-
+var _ = require('lodash-node');
 var s3 = require('../modules/s3');
 
-var ebUrl = function () {
-  var s = [];
-  s.push(Config.eventbriteApiUrl);
-  s.push(Config.eventbriteApiEventListUrl);
-  s.push("?token=");
-  s.push(Config.eventbriteApiToken);
-
-  return s.join("");
-}
-
-//var url = "http://ec2-54-76-188-66.eu-west-1.compute.amazonaws.com";
+var eventBriteOwnedEventsUrl = [
+    Config.eventbriteApiUrl,
+    Config.eventbriteApiEventListUrl,
+    "?token=", Config.eventbriteApiToken
+].join("");
 
 router.get('/healthcheck', function (req, res) {
   res.send(200);
@@ -45,90 +39,96 @@ router.get('/', function(req, res) {
 
     if (req.isAuthenticated()) {
 
-    request({
-      url: ebUrl(),
-      json: true
-    }, function (error, response, body) {
+        function getOwnedEvents(status) {
+            var deferred = Q.defer();
 
-      if (!error && response.statusCode == 200) {
-        var events = body.events;
-        var eventGroups = {
-            live: [],
-            draft: [],
-            canceled: []
-        };
+            request({
+                url: eventBriteOwnedEventsUrl + '&status=' + status,
+                json: true
+            }, function (error, response, body) {
 
-        s3.getOrderJson(function (err, data) {
-          if (data && data.Body) { var ordering = JSON.parse(data.Body.toString('utf-8')).order; }
-          var priorityEvents = [];
-
-          if (ordering) {
-            var priorityEvents = events.filter(function (event) {
-              if (ordering.indexOf(event.id) != -1) {
-                return true
-              }
-              return false
+                if (error) {
+                    deferred.reject(new Error(error));
+                } else {
+                    deferred.resolve(body.events);
+                }
             });
 
-            priorityEvents.sort(function (a, b) {
-              var aIndex = ordering.indexOf(a.id);
-              var bIndex = ordering.indexOf(b.id);
-
-              if (aIndex > bIndex) {
-                return 1;
-              } else if (aIndex < bIndex) {
-                return -1;
-              } else {
-                return 0;
-              }
-            });
-
-            events = events.filter(function (event) {
-              //filter out completed and ids not in ordering array
-              if ((ordering.indexOf(event.id) != -1) || event.status === 'completed') {
-                return false
-              }
-              return true
-            });
-
-            events.map(function(event){
-              if (eventGroups[event.status]) {
-                eventGroups[event.status].push(event);
-              }
-            });
-          }
-
-          res.render('index', {
-            title: 'Membership Admin',
-            eventGroups: eventGroups,
-            priorityEvents: priorityEvents,
-            error: null
-          });
-
-        });
-
-      } else {
-
-        var error;
-
-        if (body) {
-          error = body.status_code == 429 ? "Hit eventbrite rate limit - please try again in a while." : body.error_description;
-        } else {
-          error = error.toString();
+            return deferred.promise;
         }
 
-        res.render('index', {
-          title: 'Membership Admin - Rate Limited.',
-          events: [],
-          priorityEvents: [],
-          error: error
-        });
-      }
+        all([
+            getOwnedEvents('live'),
+            getOwnedEvents('draft'),
+            getOwnedEvents('canceled')
+        ]).then(function (results) {
+            var events = _.flatten(results, true);
+            var eventGroups = {
+                live: [],
+                draft: [],
+                canceled: []
+            };
 
-    });
-  } else {
-    res.redirect("/login");
-  }
+            s3.getOrderJson(function (err, data) {
+                if (data && data.Body) { var ordering = JSON.parse(data.Body.toString('utf-8')).order; }
+                var priorityEvents = [];
+
+                if (ordering) {
+                    var priorityEvents = events.filter(function (event) {
+                        if (ordering.indexOf(event.id) != -1) {
+                            return true
+                        }
+                        return false
+                    });
+
+                    priorityEvents.sort(function (a, b) {
+                        var aIndex = ordering.indexOf(a.id);
+                        var bIndex = ordering.indexOf(b.id);
+
+                        if (aIndex > bIndex) {
+                            return 1;
+                        } else if (aIndex < bIndex) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                    events = events.filter(function (event) {
+                        //filter out completed and ids not in ordering array
+                        if ((ordering.indexOf(event.id) != -1) || event.status === 'completed') {
+                            return false
+                        }
+                        return true
+                    });
+
+                    events.map(function(event){
+                        if (eventGroups[event.status]) {
+                            eventGroups[event.status].push(event);
+                        }
+                    });
+                }
+
+                res.render('index', {
+                    title: 'Membership Admin',
+                    eventGroups: eventGroups,
+                    priorityEvents: priorityEvents,
+                    error: null
+                });
+
+            });
+        }, function (error) {
+            res.render('index', {
+                title: 'Membership Admin - Rate Limited.',
+                events: [],
+                priorityEvents: [],
+                error: error
+            });
+        });
+
+    } else {
+        res.redirect("/login");
+    }
 
 });
 
