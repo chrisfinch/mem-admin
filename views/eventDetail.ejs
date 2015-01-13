@@ -1,0 +1,34 @@
+<li class="event" data-id="<%= e.id %>">
+
+    <button type="button" class="btn btn-danger btn-xs remove"><span class="glyphicon glyphicon-remove"></span> Remove
+    </button>
+
+    <div class="pull-left labels">
+        <% if (e.status != "live") { %>
+        <span class="label label-danger"><%= e.status %></span>
+        <% } else { %>
+        <span class="label label-primary"><%= e.status %></span>
+        <% } %>
+        <span class="label label-info"><%= e.id %></span>
+        <a href="<%= e.url %>" target="_blank" class="btn btn-warning btn-xs"><span
+                    class="glyphicon glyphicon-link"></span> View on EventBrite</a>
+    </div>
+
+    <div class="pull-left media-body">
+        <h4 class="media-heading">
+            <%= e.name.html %>
+        </h4>
+
+        <p>
+      <span class="label label-default date" data-date="<%= e.start.local %>">
+        <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+            <% if (e.venue && e.venue.name) { %>
+            <span class="label label-default location">
+        <span class="glyphicon glyphicon-map-marker"></span> <%= e.venue.name %>
+      </span>
+            <% } %>
+        </p>
+    </div>
+
+</li>
