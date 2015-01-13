@@ -1,19 +1,19 @@
-var appConfig = require('../config/app');
+var appConfig = require('../config/app').details;
 var AWS = require('aws-sdk');
 
-AWS.config.accessKeyId = appConfig.detail.accessKeyId;
-AWS.config.secretAccessKey = appConfig.detail.secretAccessKey;
-AWS.config.region = appConfig.detail.region;
+AWS.config.accessKeyId = appConfig.accessKeyId;
+AWS.config.secretAccessKey = appConfig.secretAccessKey;
+AWS.config.region = appConfig.region;
 
 var s3Bucket = new AWS.S3({
     params: {
-        Bucket: appConfig.detail.Bucket
+        Bucket: appConfig.Bucket
     }
 });
 
 module.exports.orderJsonUpload = function (json, callback) {
     var data = {
-        Key: appConfig.detail.orderJsonKey,
+        Key: appConfig.orderJsonKey,
         Body: JSON.stringify(json),
         ACL: "public-read"
     };
@@ -23,6 +23,6 @@ module.exports.orderJsonUpload = function (json, callback) {
 
 module.exports.getOrderJson = function (callback) {
     s3Bucket.getObject({
-        Key: appConfig.detail.orderJsonKey
+        Key: appConfig.orderJsonKey
     }, callback);
 };

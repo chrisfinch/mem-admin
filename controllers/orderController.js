@@ -1,6 +1,6 @@
 'use strict';
 
-var amazonS3 = require('../models/amazonS3');
+var amazonS3 = require('../service/amazonS3');
 
 module.exports.indexAction = function (req, res) {
     amazonS3.orderJsonUpload(req.body, function (err) {

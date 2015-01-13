@@ -4,14 +4,14 @@ var _ = require('lodash-node');
 var all = require("node-promise").all;
 var Q = require('q');
 var request = require('request');
-var amazonS3 = require('../models/amazonS3');
-var appConfig = require('../config/app');
+var amazonS3 = require('../service/amazonS3');
+var eventbriteUrl = require('../config/app').eventbriteUrl();
 
 function getOwnedEvents (status) {
     var deferred = Q.defer();
 
     request({
-        url: appConfig.eventbriteUrl() + '&status=' + status,
+        url: eventbriteUrl + '&status=' + status,
         json: true
     }, function (error, response, body) {
 
