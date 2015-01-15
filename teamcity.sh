@@ -1,19 +1,18 @@
 #!/bin/bash
 
+target=target/packages/memb-eventbriteImages
+base_files="bin config node_modules prod-config server.sh package.json"
+app_files="config controllers public service views routes.js server.js"
+
 npm install
 
-mkdir public/uploads
-
-mkdir -p target/packages/memb-eventbriteImages
-
-zip -rv target/packages/memb-eventbriteImages/app.zip bin config modules node_modules public routes views server.js package.json server.sh prod-config
+mkdir -p $target
+zip -rv $target/app.zip $base_files $app_files
 
 cp deploy.json target/
 
 pushd target
-
 zip -rv artifacts.zip .
-
 popd
 
 echo "##teamcity[publishArtifacts '$(pwd)/target/artifacts.zip => .']"
