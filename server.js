@@ -1,3 +1,5 @@
+global.__base = __dirname + '/';
+
 var COOKIE_PARSER_SECRET = 'scdisecuyawebifucywr78';
 var SESSION_SECRET = '345o3t03utv9uchvpieuhv';
 
