@@ -18,7 +18,7 @@
     "express": "~4.2.0",
     "express-session": "^1.7.5",
     "lodash-node": "^2.4.1",
-    "morgan": "~1.0.0",
+    "morgan": "^1.0.1",
     "node-promise": "^0.5.10",
     "passport": "^0.2.0",
     "passport-google": "^0.3.0",
