@@ -31,6 +31,11 @@
             "Description" : "Site domain Name (e.g. 'masterclasses-alpha.theguardian.com' or 'membership.theguardian.com')",
             "Type" : "String"
         },
+        "SslArn": {
+          "Description": "SSL certificate ARN",
+          "Type": "String",
+          "Default": ""
+        },
         "AllowedIngressIps" : {
             "Description" : "IP address range (CIDR) that access the site (e.g. '77.91.248.0/21'- Internal Guardian, or '0.0.0.0/0' - the whole internet!)",
             "Type" : "String",
@@ -140,9 +145,10 @@
             "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
             "Properties" : {
                 "Listeners" : [ {
-                    "LoadBalancerPort": "80",
+                    "LoadBalancerPort": "443",
                     "InstancePort": "3000",
-                    "Protocol": "HTTP"
+                    "Protocol": "HTTPS",
+                    "SSLCertificateId": {"Ref": "SslArn"}
                 }],
                 "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
                 "Subnets" : { "Ref" : "Subnets" },
@@ -152,6 +158,10 @@
                     "UnhealthyThreshold" : "2",
                     "Interval" : "10",
                     "Timeout" : "5"
+                },
+                "ConnectionDrainingPolicy": {
+                  "Enabled" : "true",
+                  "Timeout" : "60"
                 }
             }
         },
@@ -162,8 +172,8 @@
                 "VpcId" : { "Ref" : "VpcId" },
                 "SecurityGroupIngress" : [
                     { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": { "Ref" : "AllowedIngressIps" } },
-                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.158.92/32" },
-                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.146.68/32" }
+                    { "IpProtocol": "tcp", "FromPort": "443",  "ToPort": "443",  "CidrIp": "80.254.158.92/32" },
+                    { "IpProtocol": "tcp", "FromPort": "443",  "ToPort": "443",  "CidrIp": "80.254.146.68/32" }
                 ]
             }
         },
@@ -173,8 +183,8 @@
                 "GroupDescription" : "Open up SSH access and enable HTTP access on the configured port",
                 "VpcId" : { "Ref" : "VpcId" },
                 "SecurityGroupIngress" : [
-                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "77.91.248.0/21" },
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "77.91.248.0/21" },
+                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": { "Ref" : "AllowedIngressIps" } },
+                    { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": { "Ref" : "AllowedIngressIps" } },
                     { "IpProtocol": "tcp", "FromPort": "3000", "ToPort": "3000", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } }
                 ]
             }
