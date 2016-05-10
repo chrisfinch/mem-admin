@@ -192,11 +192,11 @@
         "EventbriteImagesELBDNSrecord" : {
             "Type" : "AWS::Route53::RecordSet",
             "Properties" : {
-                "HostedZoneId" : "/hostedzone/Z1E4V12LQGXFEC",
+                "HostedZoneId" : "/hostedzone/Z8SGOO5042FR9",
                 "Comment" : "CNAME for AWS ELB",
-                "Name" :  { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] },
+                "Name" :  { "Ref" : "SiteDomain" },
                 "Type" : "CNAME",
-                "TTL" : "120",
+                "TTL" : "60",
                 "ResourceRecords" : [ {"Fn::GetAtt":["EventbriteImagesElasticLoadBalancer","DNSName"]} ]
             }
         }
