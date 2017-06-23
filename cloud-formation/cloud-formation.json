@@ -51,6 +51,11 @@
         "VulnerabilityScanningSecurityGroup": {
             "Description": "Security group that grants access to the account's Vulnerability Scanner",
             "Type": "AWS::EC2::SecurityGroup::Id"
+        },
+        "AMIID" : {
+          "Type" : "String",
+          "Description" : "Amazon Machine Image ID",
+          "Default" : "ami-3cf3ea5a"
         }
     },
     "Resources" : {
@@ -78,7 +83,7 @@
         "EventbriteImagesLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-6857e51b",
+                "ImageId" : { "Ref" : "AMIID" },
                 "SecurityGroups" : [
                   { "Ref" : "InstanceSecurityGroup" },
                   { "Ref" : "VulnerabilityScanningSecurityGroup" }
