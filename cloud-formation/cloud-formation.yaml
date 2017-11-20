@@ -86,39 +86,17 @@ Resources:
       KeyName: !Ref KeyName
       IamInstanceProfile: !Ref MembershipAppInstanceProfile
       AssociatePublicIpAddress: true
-      UserData: !Base64
-        'Fn::Join':
-          - |+
-
-          - - '#!/bin/bash -ev'
-            - !Join
-              - ''
-              - - >-
-                  wget -N --directory-prefix=/home/ubuntu/.ssh
-                  https://s3-eu-west-1.amazonaws.com/membership-dist/
-                - !Ref Stack
-                - /authorized_keys &
-            - !Join
-              - ''
-              - - 'echo https://s3-eu-west-1.amazonaws.com/membership-dist/'
-                - !Ref Stack
-                - /
-                - !Ref Stage
-                - /memb-eventbriteImages/app.zip > /etc/gu-artifact-url
-            - adduser --system --home /membership --disabled-password membership
-            - wget -i /etc/gu-artifact-url --directory-prefix=/tmp
-            - unzip -d /memb-eventbriteImages /tmp/app.zip
-            - !Join
-              - ' '
-              - - aws --region
-                - !Ref 'AWS::Region'
-                - >-
-                  s3 cp
-                  s3://membership-private/PROD/eventbriteImages-config.json
-                  /memb-eventbriteImages
-            - /opt/features/nodejs/install.sh
-            - sudo npm install pm2 -g
-            - /memb-eventbriteImages/server.sh
+      UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -ev
+            /opt/features/ssh-keys/initialise-keys-and-cron-job.sh -l -b github-team-keys -t Membership-and-Subscriptions || true
+            adduser --system --home /membership --disabled-password membership
+            aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/app.zip /tmp
+            unzip -d /memb-eventbriteImages /tmp/app.zip
+            aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/eventbriteImages-config.json /memb-eventbriteImages
+            /opt/features/nodejs/install.sh
+            sudo npm install pm2 -g
+            /memb-eventbriteImages/server.sh
   MembershipAppRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -168,21 +146,18 @@ Resources:
   LoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: 'Permit incoming HTTP access on port 80, egress to port 9000'
+      GroupDescription: 'Permit incoming HTTP access on port 443, egress to port 3000'
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: '443'
           ToPort: '443'
           CidrIp: !Ref AllowedIngressIps
+      SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: 80.254.158.92/32
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: 80.254.146.68/32
+          FromPort: '3000'
+          ToPort: '3000'
+          CidrIp: 0.0.0.0/0
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -192,10 +167,6 @@ Resources:
         - IpProtocol: tcp
           FromPort: '22'
           ToPort: '22'
-          CidrIp: !Ref AllowedIngressIps
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
           CidrIp: !Ref AllowedIngressIps
         - IpProtocol: tcp
           FromPort: '3000'
