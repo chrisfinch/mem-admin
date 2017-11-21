@@ -91,8 +91,9 @@ Resources:
             #!/bin/bash -ev
             /opt/features/ssh-keys/initialise-keys-and-cron-job.sh -l -b github-team-keys -t Membership-and-Subscriptions || true
             adduser --system --home /membership --disabled-password membership
-            aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/app.zip /tmp
-            unzip -d /memb-eventbriteImages /tmp/app.zip
+            aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/memb-eventbriteImages.tgz /tmp
+            mkdir /memb-eventbriteImages
+            tar -xvzf /tmp/memb-eventbriteImages.tgz -C /memb-eventbriteImages
             aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/eventbriteImages-config.json /memb-eventbriteImages
             /opt/features/nodejs/install.sh
             sudo npm install pm2 -g

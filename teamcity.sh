@@ -1,18 +1,14 @@
 #!/bin/bash
 
-target=target/packages/memb-eventbriteImages
-base_files="bin config node_modules prod-config server.sh package.json"
-app_files="config controllers public service views routes.js server.js"
+####################################################################################################################
+#### Turned off because a load of unnecessary babel dependencies get installled and slow down deployments ##########
+####################################################################################################################
+#Install node v4.8.6 (same as the destination server)
+#NODE_VERSION="4.8.6"
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#nvm install ${NODE_VERSION}
+#nvm use ${NODE_VERSION}
 
 npm install
-
-mkdir -p $target
-zip -rv $target/app.zip $base_files $app_files
-
-cp deploy.json target/
-
-pushd target
-zip -rv artifacts.zip .
-popd
-
-echo "##teamcity[publishArtifacts '$(pwd)/target/artifacts.zip => .']"
+npm run riffraff
