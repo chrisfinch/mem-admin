@@ -13,6 +13,10 @@ Parameters:
     Description: 'Applied directly as a tag (''membership'', or ''memb-masterclasses'')'
     Type: String
     Default: membership
+  App:
+    Description: Applied directly as a tag
+    Type: String
+    Default: memb-eventbriteImages
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instance
     Type: String
@@ -70,7 +74,7 @@ Resources:
           Value: !Ref Stack
           PropagateAtLaunch: 'true'
         - Key: App
-          Value: memb-eventbriteImages
+          Value: !Ref App
           PropagateAtLaunch: 'true'
         - Key: Stage
           Value: !Ref Stage
@@ -94,7 +98,7 @@ Resources:
             aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/memb-eventbriteImages.tgz /tmp
             mkdir /memb-eventbriteImages
             tar -xzf /tmp/memb-eventbriteImages.tgz -C /memb-eventbriteImages
-            aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/eventbriteImages-config.json /memb-eventbriteImages
+            aws --region ${AWS::Region} s3 cp s3://gu-reader-revenue-private/${Stack}/${App}/${Stage}/eventbriteImages-config.json /memb-eventbriteImages
             /opt/features/nodejs/install.sh
             sudo npm install pm2 -g
             /memb-eventbriteImages/server.sh
@@ -116,8 +120,8 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action: 's3:GetObject'
-                Resource: 'arn:aws:s3:::membership-private/*'
+                Action: s3:GetObject
+                Resource: !Sub arn:aws:s3:::gu-reader-revenue-private/${Stack}/${App}/${Stage}/*
   MembershipAppInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
