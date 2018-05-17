@@ -1,0 +1,9 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.10.2
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:braces:20180219':
+    - node-riffraff-artefact > babel-cli > chokidar > anymatch > micromatch > braces:
+        reason: No remediation available
+        expires: '2018-06-16T14:06:08.480Z'
+patch: {}
