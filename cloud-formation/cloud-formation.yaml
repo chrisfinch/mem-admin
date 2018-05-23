@@ -93,7 +93,6 @@ Resources:
       UserData:
           Fn::Base64: !Sub |
             #!/bin/bash -ev
-            /opt/features/ssh-keys/initialise-keys-and-cron-job.sh -l -b github-team-keys -t Membership-and-Subscriptions || true
             adduser --system --home /membership --disabled-password membership
             aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/memb-eventbriteImages.tgz /tmp
             mkdir /memb-eventbriteImages
@@ -166,13 +165,9 @@ Resources:
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: Open up SSH access and enable HTTP access on the configured port
+      GroupDescription: Enable inbound HTTP access on the configured port
       VpcId: !Ref VpcId
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: !Ref AllowedIngressIps
         - IpProtocol: tcp
           FromPort: '3000'
           ToPort: '3000'
