@@ -93,6 +93,9 @@ Resources:
             mkdir /memb-eventbriteImages
             tar -xzf /tmp/memb-eventbriteImages.tgz -C /memb-eventbriteImages
             aws --region ${AWS::Region} s3 cp s3://gu-reader-revenue-private/${Stack}/${App}/${Stage}/eventbriteImages-config.json /memb-eventbriteImages
+            wget -O /tmp/aws-inspector-installer https://d1wk0tztpsntt1.cloudfront.net/linux/latest/install
+            /bin/bash /tmp/aws-inspector-installer
+            rm /tmp/aws-inspector-installer
             /opt/features/nodejs/install.sh
             sudo npm install pm2 -g
             /memb-eventbriteImages/server.sh
