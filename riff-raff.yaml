@@ -5,13 +5,13 @@ stacks:
 deployments:
   ami:
     type: ami-cloudformation-parameter
-      app: memb-eventbriteImages
-      parameters:
-        amiTags:
-          Recipe: xenial-membership
-          AmigoStage: PROD
-        amiParameter: AMIID
-        amiEncrypted: true
+    app: memb-eventbriteImages
+    parameters:
+      amiTags:
+        Recipe: xenial-membership
+        AmigoStage: PROD
+      amiParameter: AMIID
+      amiEncrypted: true
   memb-eventbriteImages:
     parameters:
       bucket: membership-dist
