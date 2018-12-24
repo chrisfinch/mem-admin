@@ -117,6 +117,8 @@ Resources:
     Type: 'AWS::IAM::Role'
     Properties:
       Path: /
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/guardian-ec2-role-for-ssm
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -133,6 +135,16 @@ Resources:
               - Effect: Allow
                 Action: s3:GetObject
                 Resource: !Sub arn:aws:s3:::gu-reader-revenue-private/${Stack}/${App}/${Stage}/*
+        - PolicyName: PushLogs
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt EventbriteImagesLogGroup.Arn
   MembershipAppInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
@@ -196,6 +208,11 @@ Resources:
         - !GetAtt
           - EventbriteImagesElasticLoadBalancer
           - DNSName
+  EventbriteImagesLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: !Sub ${App}-${Stage}
+      RetentionInDays: 14
 Outputs:
   URL:
     Description: URL of the EventbriteImages website
