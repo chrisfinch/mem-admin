@@ -15,4 +15,5 @@ deployments:
   memb-eventbriteImages:
     parameters:
       bucket: membership-dist
+    dependencies: [ami]
     type: autoscaling
