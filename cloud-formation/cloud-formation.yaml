@@ -41,7 +41,6 @@ Parameters:
   AMIID:
     Type: String
     Description: Amazon Machine Image ID
-    Default:
 Resources:
   EventbriteImagesAutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
