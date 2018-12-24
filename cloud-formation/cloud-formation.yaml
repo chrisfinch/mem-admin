@@ -84,17 +84,41 @@ Resources:
       UserData:
           Fn::Base64: !Sub |
             #!/bin/bash -ev
-            adduser --system --home /membership --disabled-password membership
+
+            # get runnable tar from S3
             aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/memb-eventbriteImages.tgz /tmp
-            mkdir /memb-eventbriteImages
-            tar -xzf /tmp/memb-eventbriteImages.tgz -C /memb-eventbriteImages
-            aws --region ${AWS::Region} s3 cp s3://gu-reader-revenue-private/${Stack}/${App}/${Stage}/eventbriteImages-config.json /memb-eventbriteImages
-            wget -O /tmp/aws-inspector-installer https://d1wk0tztpsntt1.cloudfront.net/linux/latest/install
-            /bin/bash /tmp/aws-inspector-installer
-            rm /tmp/aws-inspector-installer
-            /opt/features/nodejs/install.sh
-            sudo npm install pm2 -g
-            /memb-eventbriteImages/server.sh
+            mkdir /etc/gu/memb-eventbriteImages
+            tar -xzf /tmp/memb-eventbriteImages.tgz -C /etc/gu/memb-eventbriteImages
+            aws --region ${AWS::Region} s3 cp s3://gu-reader-revenue-private/${Stack}/${App}/${Stage}/eventbriteImages-config.json /etc/gu/memb-eventbriteImages
+
+            # add user
+            groupadd membership
+            useradd -r -s /usr/bin/nologin -g membership memb-eventbriteImages
+            chown -R memb-eventbriteImages:membership /etc/gu
+
+            # set up logging
+            touch /var/log/memb-eventbriteImages.log
+            chown memb-eventbriteImages:membership /var/log/memb-eventbriteImages.log
+            /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/memb-eventbriteImages.log
+
+            # set up startup daemon
+            cat >/etc/systemd/system/memb-eventbriteImages.service <<EOL
+            [Service]
+            ExecStart=/usr/bin/node /etc/gu/memb-eventbriteImages/bin/www
+            Restart=always
+            StandardOutput=syslog
+            StandardError=syslog
+            SyslogIdentifier=memb-eventbriteImages
+            User=memb-eventbriteImages
+            Group=membership
+            Environment=NODE_ENV=production
+            [Install]
+            WantedBy=multi-user.target
+            EOL
+
+            # Start application
+            systemctl enable memb-eventbriteImages
+            systemctl start memb-eventbriteImages
   MembershipAppRole:
     Type: 'AWS::IAM::Role'
     Properties:
