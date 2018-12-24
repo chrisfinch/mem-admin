@@ -3,7 +3,17 @@ regions:
 stacks:
 - membership
 deployments:
+  ami:
+    type: ami-cloudformation-parameter
+    app: memb-eventbriteImages
+    parameters:
+      amiTags:
+        Recipe: ubuntu-xenial-node-4
+        AmigoStage: PROD
+      amiParameter: AMIID
+      amiEncrypted: true
   memb-eventbriteImages:
     parameters:
       bucket: membership-dist
+    dependencies: [ami]
     type: autoscaling
