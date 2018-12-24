@@ -47,7 +47,7 @@ Parameters:
   AMIID:
     Type: String
     Description: Amazon Machine Image ID
-    Default: ami-6857e51b
+    Default: ami-094aad897465c769e
 Resources:
   EventbriteImagesAutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -87,7 +87,7 @@ Resources:
 
             # get runnable tar from S3
             aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/memb-eventbriteImages/memb-eventbriteImages.tgz /tmp
-            mkdir /etc/gu/memb-eventbriteImages
+            mkdir -p /etc/gu/memb-eventbriteImages
             tar -xzf /tmp/memb-eventbriteImages.tgz -C /etc/gu/memb-eventbriteImages
             aws --region ${AWS::Region} s3 cp s3://gu-reader-revenue-private/${Stack}/${App}/${Stage}/eventbriteImages-config.json /etc/gu/memb-eventbriteImages
 
