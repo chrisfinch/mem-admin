@@ -21,11 +21,6 @@ Parameters:
     Description: Applied directly as a tag
     Type: String
     Default: PROD
-  SiteDomain:
-    Description: >-
-      Site domain Name (e.g. 'masterclasses-alpha.theguardian.com' or
-      'membership.theguardian.com')
-    Type: String
   SslArn:
     Description: SSL certificate ARN
     Type: String
@@ -41,7 +36,6 @@ Parameters:
     Type: String
     Default: t2.small
     AllowedValues:
-      - t2.micro
       - t2.small
     ConstraintDescription: must be a valid EC2 instance type.
   AMIID:
@@ -193,12 +187,12 @@ Resources:
   EventbriteImagesELBDNSrecord:
     Type: 'AWS::Route53::RecordSet'
     Properties:
-      HostedZoneId: /hostedzone/Z1E4V12LQGXFEC
+      HostedZoneId: /hostedzone/Z8SGOO5042FR9
       Comment: CNAME for AWS ELB
       Name: !Join
         - .
-        - - !Ref SiteDomain
-          - origin.membership.guardianapis.com.
+        - - !Sub ${App}-${Stage}
+          - membership-event-management.gutools.co.uk.
       Type: CNAME
       TTL: '120'
       ResourceRecords:
