@@ -8,7 +8,7 @@ deployments:
     app: memb-eventbriteImages
     parameters:
       amiTags:
-        Recipe: manage-frontend
+        Recipe: ubuntu-xenial-node-4
         AmigoStage: PROD
       amiParameter: AMIID
       amiEncrypted: true
