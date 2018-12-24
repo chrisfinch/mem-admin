@@ -189,10 +189,7 @@ Resources:
     Properties:
       HostedZoneId: /hostedzone/Z8SGOO5042FR9
       Comment: CNAME for AWS ELB
-      Name: !Join
-        - .
-        - - !Sub ${App}-${Stage}
-          - membership-event-management.gutools.co.uk.
+      Name: !Sub ${App}-${Stage}.membership-event-management.gutools.co.uk.
       Type: CNAME
       TTL: '120'
       ResourceRecords:
