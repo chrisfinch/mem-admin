@@ -34,7 +34,7 @@ Parameters:
   InstanceType:
     Description: EC2 instance type
     Type: String
-    Default: t3.small
+    Default: t3.micro
     AllowedValues:
       - t2.small
       - t3.micro
