@@ -76,7 +76,7 @@ Resources:
         - !Ref InstanceSecurityGroup
       InstanceType: !Ref InstanceType
       IamInstanceProfile: !Ref MembershipAppInstanceProfile
-      AssociatePublicIpAddress: true
+      AssociatePublicIpAddress: false
       UserData:
           Fn::Base64: !Sub |
             #!/bin/bash -ev
