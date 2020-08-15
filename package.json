@@ -23,7 +23,7 @@
     "morgan": "^1.0.1",
     "node-promise": "^0.5.10",
     "node-riffraff-artefact": "^2.0.1",
-    "passport": "^0.2.0",
+    "passport": "^0.4.1",
     "passport-google": "^0.3.0",
     "passport-google-oauth": "^0.1.5",
     "q": "^1.1.2",
