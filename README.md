@@ -1,3 +1,5 @@
+# This repo is archived, the tool is out of use now.
+
 
 # Get going
 You need to obtain eventbriteImages-config.json please speak with a dev on the team on how to get this.
